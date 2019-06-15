@@ -2,8 +2,11 @@
 #define KALMAN_FILTER_H_
 
 #include "Eigen/Dense"
+#include "tools.h"
 
 class KalmanFilter {
+  private:
+  Tools tools;
  public:
   /**
    * Constructor
@@ -60,7 +63,6 @@ class KalmanFilter {
 
   // measurement matrix
   Eigen::MatrixXd H_;
-  Eigen::MatrixXd Hj_;
 
   // measurement covariance matrix
   Eigen::MatrixXd R_;
