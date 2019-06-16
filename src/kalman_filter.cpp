@@ -54,15 +54,24 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
    * TODO: update the state by using Extended Kalman Filter equations
    */
-  double radius = sqrt(x_[0] * x_[0] + x_[1] * x_[1]);
+  double radius = sqrt(x_(0) * x_(0) + x_(1) * x_(1));
+  double pi = 22.0 / 7.0;
   VectorXd z_pred = VectorXd(3);
-  
-  z_pred << radius,
-            atan2(x_[1],x_[0]),
-            (double)(x_[2] * x_[0] + x_[3] * x_[1]) / radius;
 
+  z_pred << radius,
+            (double)atan2(x_(1),x_(0)),
+            (double)(x_(2) * x_(0) + x_(3) * x_(1)) / radius;
 
   VectorXd y = z - z_pred;
+
+  while(y(1) > pi) {
+    y(1) -= 2.0 * pi;
+  }
+
+  while(y(1) < -pi) {
+    y(1) += 2.0 * pi;
+  }
+
   MatrixXd Hj = tools.CalculateJacobian(x_);
   MatrixXd Hjt = Hj.transpose();
   MatrixXd S = Hj * P_ * Hjt + R_radar;
